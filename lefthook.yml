@@ -1,0 +1,12 @@
+# Runs the same checks as CI (.github/workflows/ci.yml) before each commit.
+pre-commit:
+  parallel: true
+  commands:
+    lint:
+      run: pnpm lint
+    typecheck:
+      run: pnpm exec tsc -b --noEmit
+    test:
+      run: pnpm test:coverage
+    build:
+      run: pnpm build

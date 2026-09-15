@@ -1,0 +1,226 @@
+/* Auth screens — component styling only. The design tokens (var(--…)) come
+   from the global theme in src/global.css. */
+.AuthScroll {
+  height: 100vh;
+  width: 100%;
+  background-color: var(--background);
+}
+
+/* min-height:100vh centers the card when the form is short; when validation
+   errors make it taller than the screen it grows past the viewport (no free
+   space left to center), so content packs from the top and AuthScroll scrolls
+   — avoiding the flexbox "centered overflow clips the top" trap. */
+.AuthPage {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40rpx;
+  background-color: var(--background);
+}
+
+/* ---- Brand mark (ties the auth screens to the stock app) ---- */
+.AuthBrand {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 40rpx;
+}
+
+.AuthBrand-name {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: var(--foreground);
+  letter-spacing: -0.5rpx;
+}
+
+.AuthBrand-ticker {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 40rpx;
+  padding-left: 14rpx;
+  padding-right: 14rpx;
+  margin-left: 16rpx;
+  border-radius: 999rpx;
+  background-color: rgba(22, 163, 74, 0.1);
+}
+
+.AuthBrand-tickerText {
+  font-size: 22rpx;
+  font-weight: 600;
+  color: var(--trend-up);
+}
+
+/* ---- Card ---- */
+.AuthCard {
+  width: 100%;
+  max-width: 620rpx;
+  display: flex;
+  flex-direction: column;
+  padding: 48rpx;
+  border-radius: 28rpx;
+  border: 1rpx solid var(--border);
+  background-color: var(--card);
+}
+
+.AuthCard-header {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 40rpx;
+}
+
+.AuthCard-title {
+  font-size: 44rpx;
+  font-weight: 700;
+  color: var(--foreground);
+  letter-spacing: -0.5rpx;
+}
+
+.AuthCard-description {
+  font-size: 26rpx;
+  color: var(--muted-foreground);
+  margin-top: 10rpx;
+  line-height: 38rpx;
+}
+
+/* ---- Fields ---- */
+.Field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 28rpx;
+}
+
+.Field-label {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.Field-input {
+  height: 92rpx;
+  padding-left: 24rpx;
+  padding-right: 24rpx;
+  border-radius: var(--radius);
+  border: 1rpx solid var(--input);
+  background-color: var(--background);
+  font-size: 30rpx;
+  color: var(--foreground);
+}
+
+.Field-input.has-error {
+  border-color: var(--destructive);
+}
+
+.Field-error {
+  font-size: 24rpx;
+  color: var(--destructive);
+  margin-top: 10rpx;
+}
+
+/* ---- Terms row (register) ---- */
+.TermsRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 4rpx;
+  margin-bottom: 32rpx;
+}
+
+.TermsCheckbox {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 10rpx;
+  border: 1rpx solid var(--input);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--background);
+}
+
+.TermsCheckbox.is-checked {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.TermsCheckbox-mark {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: var(--primary-foreground);
+}
+
+.TermsRow-label {
+  flex: 1;
+  font-size: 25rpx;
+  color: var(--muted-foreground);
+  margin-left: 16rpx;
+  line-height: 34rpx;
+}
+
+.TermsRow-link {
+  color: var(--foreground);
+  font-weight: 500;
+}
+
+/* ---- Buttons ---- */
+.PrimaryButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 96rpx;
+  border-radius: var(--radius);
+  background-color: var(--primary);
+  margin-top: 8rpx;
+}
+
+.PrimaryButton.ui-active {
+  background-color: #000000;
+}
+
+.PrimaryButton.ui-disabled {
+  opacity: 0.5;
+}
+
+.PrimaryButton-label {
+  color: var(--primary-foreground);
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+/* Forgot-password inline link (login) */
+.FieldLabelRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 36rpx;
+  margin-bottom: 12rpx;
+}
+
+.InlineLink {
+  font-size: 24rpx;
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+/* ---- Footer switch link ---- */
+.AuthFooter {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-top: 36rpx;
+}
+
+.AuthFooter-text {
+  font-size: 26rpx;
+  color: var(--muted-foreground);
+}
+
+.AuthFooter-link {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: var(--foreground);
+  margin-left: 8rpx;
+}

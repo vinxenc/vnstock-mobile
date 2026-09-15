@@ -1,0 +1,38 @@
+/* Global design tokens — the shadcn-style theme for the whole app.
+ *
+ * Defined on :root so every screen and component inherits them (Lynx supports
+ * :root for app-wide CSS variables). This is the single source of truth for the
+ * palette: change a colour here and it propagates everywhere. Component-specific
+ * styling lives next to each component (e.g. components/AuthScreen/auth.css) and
+ * only consumes these tokens via var(--…).
+ *
+ * The palette is deliberately monochrome — black / white / zinc-grays — with
+ * green + red reserved strictly for market-trend / status signals.
+ */
+:root {
+  /* Surfaces */
+  --background: #ffffff;
+  --card: #ffffff;
+  --muted: #f4f4f5;
+
+  /* Text */
+  --foreground: #09090b;
+  --muted-foreground: #71717a;
+
+  /* Lines & controls */
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --ring: #18181b;
+
+  /* Primary action */
+  --primary: #18181b;
+  --primary-foreground: #fafafa;
+
+  /* Status / market-trend signals */
+  --destructive: #dc2626;
+  --trend-up: #16a34a;
+  --trend-down: #dc2626;
+
+  /* Radius */
+  --radius: 20rpx;
+}

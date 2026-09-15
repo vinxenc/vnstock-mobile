@@ -3,14 +3,17 @@ import '@lynx-js/react/debug';
 import { root } from '@lynx-js/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 
-import { About } from '@/pages/About.js';
-import { Home } from '@/pages/Home.js';
+import { Login } from '@/pages/login/index.js';
+import { Register } from '@/pages/register/index.js';
+
+import './global.css';
 
 root.render(
   <MemoryRouter>
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/about" element={<About />} />
+      <Route path="/" element={<Login />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
     </Routes>
   </MemoryRouter>,
 );

@@ -25,8 +25,8 @@ pnpm dev
 ```
 
 Scan the QR code printed in the terminal with **Lynx Explorer** (or paste the bundle
-URL into its "Enter Bundle URL" field). Edit `src/App.tsx` or a page under `src/pages/`
-and the app hot-reloads.
+URL into its "Enter Bundle URL" field). Edit a page under `src/pages/` and the app
+hot-reloads.
 
 ## Run on the iOS Simulator
 
@@ -95,35 +95,71 @@ Other notes:
 
 ## Scripts
 
-| Command        | Description                                  |
-| -------------- | -------------------------------------------- |
-| `pnpm dev`     | Start the dev server (QR code + hot reload)  |
-| `pnpm build`   | Production build (runs the type checker too) |
-| `pnpm preview` | Preview the production build                 |
-| `pnpm test`    | Run tests (Rstest + React Lynx Testing Lib)  |
-| `pnpm lint`    | Lint with ESLint                             |
-| `pnpm format`  | Format with Prettier                         |
+| Command              | Description                                  |
+| -------------------- | -------------------------------------------- |
+| `pnpm dev`           | Start the dev server (QR code + hot reload)  |
+| `pnpm build`         | Production build (runs the type checker too) |
+| `pnpm preview`       | Preview the production build                 |
+| `pnpm test`          | Run tests (Rstest + React Lynx Testing Lib)  |
+| `pnpm test:coverage` | Run tests with the 90% coverage gate         |
+| `pnpm lint`          | Lint with ESLint                             |
+| `pnpm format`        | Format with Prettier                         |
 
 ## Project structure
 
+Everything is organised as self-contained folders — `<name>/index.tsx` plus co-located
+`__tests__/`. Screens live in `pages/`, reusable UI in `components/`, and pure logic in
+`lib/`.
+
 ```
 src/
-  index.tsx        # entry: root.render() wrapped in <MemoryRouter> + <Routes>
-  App.tsx          # /demo route — the ReactLynx starter demo
-  pages/           # route screens (Home, About, …)
-  components/      # shared UI built on @lynx-js/lynx-ui
-  hooks/           # shared hooks
-  lib/             # data fetching / vnstock API client
-  common/          # framework-agnostic utils (e.g. format.ts)
+  index.tsx                          # entry: root.render() with <MemoryRouter> + <Routes>
+  global.css                         # shadcn-style design tokens on :root (imported once here)
+  components/                        # reusable UI (same folder-per-component convention)
+    AuthScreen/
+      index.tsx                      # scrollable, vertically-centered page shell
+      auth.css                       # auth-specific styles (consumes the global tokens)
+      __tests__/index.spec.tsx
+    Field/
+      index.tsx                      # labeled <input> + inline validation error
+      __tests__/index.spec.tsx
+  lib/                               # framework-agnostic logic (no Lynx/JSX)
+    authValidation.ts                # pure, fully unit-tested form validation
+    __tests__/authValidation.spec.ts
+  pages/
+    login/
+      index.tsx                      # Login screen
+      __tests__/index.spec.tsx
+    register/
+      index.tsx                      # Register screen
+      __tests__/index.spec.tsx
 ```
+
+Conventions:
+
+- **Folder-per-unit.** Screens (`pages/<name>/`) and components (`components/<Name>/`)
+  are folders exposing an `index.tsx`, imported as `@/pages/<name>/index.js` /
+  `@/components/<Name>/index.js`.
+- **Styling (shadcn model).** The design tokens — the colour palette and `--radius` — live
+  once in `src/global.css` on `:root` (Lynx supports `:root` for app-wide CSS variables),
+  imported a single time from `src/index.tsx`. Component-specific CSS is co-located with its
+  component (e.g. `components/AuthScreen/auth.css`) and only reads tokens via `var(--…)`, so
+  the whole app re-themes from one file. The palette is monochrome; green/red are reserved
+  for market-trend and status signals.
+- **Tests** are co-located in `__tests__/*.spec.tsx`. Rstest matches `*.{test,spec}.{ts,tsx}`,
+  and CI enforces the **90 %** coverage thresholds from `rstest.config.js` — keep view
+  components thin and push logic into pure `lib/` modules (e.g. `authValidation.ts`).
+- **Reusable building blocks** go in `components/` (UI) and `lib/` (logic), never under
+  `pages/`, so screens depend on them and not the other way around.
 
 The `@/*` path alias maps to `src/*` (configured in both `lynx.config.ts`
 `source.alias` and `src/tsconfig.json` `paths`).
 
 ### Routing
 
-React Router v6 with `MemoryRouter`. ReactLynx has no DOM, so navigate with
-`useNavigate()` — `<Link>` / `<NavLink>` are not supported.
+React Router v6 with `MemoryRouter`. Routes are declared in `src/index.tsx`: `/` and
+`/login` render the Login screen, `/register` renders Register. ReactLynx has no DOM, so
+navigate with `useNavigate()` — `<Link>` / `<NavLink>` are not supported.
 
 ## AI-assisted development
 

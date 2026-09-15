@@ -9,6 +9,7 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+# Jobs run sequentially via `needs`; if one fails the rest are skipped.
 jobs:
   lint:
     name: Lint
@@ -25,9 +26,26 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
 
+  typecheck:
+    name: Type check
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec tsc -b --noEmit
+
   test:
     name: Unit tests
     runs-on: ubuntu-latest
+    needs: typecheck
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -47,24 +65,10 @@ jobs:
           path: coverage/
           if-no-files-found: ignore
 
-  typecheck:
-    name: Type check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm exec tsc -b --noEmit
-
   build:
     name: Build
     runs-on: ubuntu-latest
+    needs: test
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -80,6 +84,7 @@ jobs:
   audit:
     name: Audit
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4

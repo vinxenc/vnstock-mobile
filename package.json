@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "rspeedy build",
+    "analyze": "RSDOCTOR=true rspeedy build",
     "dev": "rspeedy dev",
     "format": "prettier --write .",
     "lint": "eslint .",

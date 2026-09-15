@@ -14,12 +14,9 @@ export function Home() {
       </view>
 
       <view className="Actions">
-        <Button className="PrimaryButton" onClick={() => nav('/demo')}>
-          <text className="ButtonLabel">View ReactLynx demo</text>
+        <Button className="PrimaryButton" onClick={() => nav('/about')}>
+          <text className="ButtonLabel">About this app</text>
         </Button>
-        <text className="Link" bindtap={() => nav('/about')}>
-          About this app
-        </text>
       </view>
     </view>
   );

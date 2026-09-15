@@ -9,7 +9,9 @@
     "format": "prettier --write .",
     "lint": "eslint .",
     "preview": "rspeedy preview",
-    "test": "rstest run"
+    "test": "rstest run",
+    "test:coverage": "rstest run --coverage",
+    "prepare": "lefthook install"
   },
   "dependencies": {
     "@lynx-js/lynx-ui": "^3.137.0",
@@ -25,6 +27,7 @@
     "@lynx-js/types": "4.1.0",
     "@rsbuild/plugin-type-check": "1.6.0",
     "@rstest/core": "0.11.12",
+    "@rstest/coverage-istanbul": "0.11.12",
     "@testing-library/jest-dom": "^7.0.0",
     "@types/react": "^18.3.31",
     "eslint": "^10.7.0",
@@ -32,6 +35,7 @@
     "eslint-plugin-react-refresh": "^0.5.3",
     "globals": "^17.7.0",
     "jsdom": "^27.4.0",
+    "lefthook": "^2.1.14",
     "prettier": "^3.9.5",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.64.0"

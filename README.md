@@ -114,10 +114,11 @@ Everything is organised as self-contained folders — `<name>/index.tsx` plus co
 ```
 src/
   index.tsx                          # entry: root.render() with <MemoryRouter> + <Routes>
+  global.css                         # shadcn-style design tokens on :root (imported once here)
   components/                        # reusable UI (same folder-per-component convention)
     AuthScreen/
       index.tsx                      # scrollable, vertically-centered page shell
-      auth.css                       # shadcn-style design tokens + component styles
+      auth.css                       # auth-specific styles (consumes the global tokens)
       __tests__/index.spec.tsx
     Field/
       index.tsx                      # labeled <input> + inline validation error
@@ -139,6 +140,12 @@ Conventions:
 - **Folder-per-unit.** Screens (`pages/<name>/`) and components (`components/<Name>/`)
   are folders exposing an `index.tsx`, imported as `@/pages/<name>/index.js` /
   `@/components/<Name>/index.js`.
+- **Styling (shadcn model).** The design tokens — the colour palette and `--radius` — live
+  once in `src/global.css` on `:root` (Lynx supports `:root` for app-wide CSS variables),
+  imported a single time from `src/index.tsx`. Component-specific CSS is co-located with its
+  component (e.g. `components/AuthScreen/auth.css`) and only reads tokens via `var(--…)`, so
+  the whole app re-themes from one file. The palette is monochrome; green/red are reserved
+  for market-trend and status signals.
 - **Tests** are co-located in `__tests__/*.spec.tsx`. Rstest matches `*.{test,spec}.{ts,tsx}`,
   and CI enforces the **90 %** coverage thresholds from `rstest.config.js` — keep view
   components thin and push logic into pure `lib/` modules (e.g. `authValidation.ts`).

@@ -6,6 +6,8 @@ import { MemoryRouter, Route, Routes } from 'react-router';
 import { Login } from '@/pages/login/index.js';
 import { Register } from '@/pages/register/index.js';
 
+import './global.css';
+
 root.render(
   <MemoryRouter>
     <Routes>

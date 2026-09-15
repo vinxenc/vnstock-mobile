@@ -42,6 +42,9 @@ importers:
       '@rstest/core':
         specifier: 0.11.12
         version: 0.11.12(jsdom@27.4.0)
+      '@rstest/coverage-istanbul':
+        specifier: 0.11.12
+        version: 0.11.12(@rstest/core@0.11.12(jsdom@27.4.0))
       '@testing-library/jest-dom':
         specifier: ^7.0.0
         version: 7.0.1(@testing-library/dom@10.4.1)
@@ -1065,6 +1068,11 @@ packages:
       jsdom:
         optional: true
 
+  '@rstest/coverage-istanbul@0.11.12':
+    resolution: {integrity: sha512-sIkrvsJa3o7m4tUyQH6FRHelboD7qQ+ZXHC5mAus8AO8kiEw4LKWbmnxsBEJZlVs2YCwS+r6z9rHIc3NtPE9kA==}
+    peerDependencies:
+      '@rstest/core': ^0.11.0
+
   '@sinclair/typebox@0.34.52':
     resolution: {integrity: sha512-XiMQh7qqVlxZzcVD+kkGMNGMzcTrDMLWI7S4x7z1MkCkbDPrekpZXEUK0eZqZFMuHQg2a2DZOcDIh9o5v3Gonw==}
 
@@ -1996,6 +2004,9 @@ packages:
     resolution: {integrity: sha512-CV9TW3Y3f8/wT0BRFc1/KAVQ3TUHiXmaAb6VW9vtiMFf7SLoMd1PdAc4W3KFOFETBJUb90KatHqlsZMWV+R9Gg==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
 
+  html-escaper@2.0.2:
+    resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
+
   htmlparser2@10.0.0:
     resolution: {integrity: sha512-TwAZM+zE5Tq3lrEHvOlvwgj1XLWQCtaaibSN11Q+gGBAS7Y1uZSWwXXRe4iF6OXnaq1riyQAPFOBtYc77Mxq0g==}
 
@@ -2153,6 +2164,22 @@ packages:
   isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
 
+  istanbul-lib-coverage@3.2.2:
+    resolution: {integrity: sha512-O8dpsF+r0WV/8MNRKfnmrtCWhuKjxrq2w+jpzBL5UZKTi2LeVWnWOmWRxFlesJONmc+wLAGvKQZEOanko0LFTg==}
+    engines: {node: '>=8'}
+
+  istanbul-lib-report@3.0.1:
+    resolution: {integrity: sha512-GCfE1mtsHGOELCU8e/Z7YWzpmybrx/+dSTfLrvY8qRmaY6zXTKWn6WQIjaAFw069icm6GVMNkgu0NzI4iPZUNw==}
+    engines: {node: '>=10'}
+
+  istanbul-lib-source-maps@5.0.6:
+    resolution: {integrity: sha512-yg2d+Em4KizZC5niWhQaIomgf5WlL4vOOjZ5xGCmF8SnPE/mDWWXgvRExdcpCgh9lLRRa1/fSYp2ymmbJ1pI+A==}
+    engines: {node: '>=10'}
+
+  istanbul-reports@3.2.0:
+    resolution: {integrity: sha512-HGYWWS/ehqTV3xN10i23tkPkpH46MLCIMFNCaaKNavAXTF1RkqxawEPtnjnGZ6XKSInBKkiOA5BKS+aZiY3AvA==}
+    engines: {node: '>=8'}
+
   jest-regex-util@30.5.0:
     resolution: {integrity: sha512-Mg0WK7A6xRHLSA1udJ8y9f3lM0uUhFTBnLKzwPmqB9AylvpleJ6BLemR8K9dK27DY+cesDryoA7yLZCAHsPG1A==}
     engines: {node: ^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0}
@@ -2250,6 +2277,10 @@ packages:
   lz-string@1.5.0:
     resolution: {integrity: sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==}
     hasBin: true
+
+  make-dir@4.0.0:
+    resolution: {integrity: sha512-hXdUTZYIVOt1Ex//jAQi+wTZZpUpwBj/0QsOzqegb3rGMMeJiSEu5xLHnYfBrRV4RH2+OCSOO95Is/7x1WJ4bw==}
+    engines: {node: '>=10'}
 
   markdown-it@15.0.1:
     resolution: {integrity: sha512-9/7gE95FNPkfUWrjJIoHZza2iLmuJlPD0UNMxPi7bxUrbCR525YZY0r+zyfes0dZI5ZZ/uNIXUJca0pJvtw41g==}
@@ -2911,6 +2942,9 @@ packages:
     resolution: {integrity: sha512-bkxnTg1kSU0guhIBmibA6UUhrQmPVA1XsQLN+ylCd+UWzbnLkySOcXpyk1mrl05f+pcaCx2eHb+sp6BgMZWX+Q==}
     engines: {node: '>=16'}
     hasBin: true
+
+  swc-plugin-coverage-instrument@0.0.33:
+    resolution: {integrity: sha512-zM17DgG3jURPNOrEHye0MtrkrsZ9BtCMf3W5osQTHAtlNolfDUtZl7740wdx7XhUSL322qdph//DgHzZe62wHg==}
 
   symbol-tree@3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
@@ -4409,6 +4443,17 @@ snapshots:
       - '@module-federation/runtime-tools'
       - core-js
 
+  '@rstest/coverage-istanbul@0.11.12(@rstest/core@0.11.12(jsdom@27.4.0))':
+    dependencies:
+      '@rstest/core': 0.11.12(jsdom@27.4.0)
+      istanbul-lib-coverage: 3.2.2
+      istanbul-lib-report: 3.0.1
+      istanbul-lib-source-maps: 5.0.6
+      istanbul-reports: 3.2.0
+      swc-plugin-coverage-instrument: 0.0.33
+    transitivePeerDependencies:
+      - supports-color
+
   '@sinclair/typebox@0.34.52': {}
 
   '@socket.io/component-emitter@3.1.2': {}
@@ -5484,6 +5529,8 @@ snapshots:
     transitivePeerDependencies:
       - '@noble/hashes'
 
+  html-escaper@2.0.2: {}
+
   htmlparser2@10.0.0:
     dependencies:
       domelementtype: 2.3.0
@@ -5647,6 +5694,27 @@ snapshots:
 
   isexe@2.0.0: {}
 
+  istanbul-lib-coverage@3.2.2: {}
+
+  istanbul-lib-report@3.0.1:
+    dependencies:
+      istanbul-lib-coverage: 3.2.2
+      make-dir: 4.0.0
+      supports-color: 7.2.0
+
+  istanbul-lib-source-maps@5.0.6:
+    dependencies:
+      '@jridgewell/trace-mapping': 0.3.31
+      debug: 4.4.3
+      istanbul-lib-coverage: 3.2.2
+    transitivePeerDependencies:
+      - supports-color
+
+  istanbul-reports@3.2.0:
+    dependencies:
+      html-escaper: 2.0.2
+      istanbul-lib-report: 3.0.1
+
   jest-regex-util@30.5.0: {}
 
   jest-util@30.5.1:
@@ -5759,6 +5827,10 @@ snapshots:
       yallist: 3.1.1
 
   lz-string@1.5.0: {}
+
+  make-dir@4.0.0:
+    dependencies:
+      semver: 7.8.5
 
   markdown-it@15.0.1:
     dependencies:
@@ -6419,6 +6491,8 @@ snapshots:
       csso: 5.0.5
       picocolors: 1.1.1
       sax: 1.6.1
+
+  swc-plugin-coverage-instrument@0.0.33: {}
 
   symbol-tree@3.2.4: {}
 

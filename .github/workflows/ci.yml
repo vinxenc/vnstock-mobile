@@ -38,8 +38,14 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      # --passWithNoTests keeps CI green until test files are added
-      - run: pnpm test -- --passWithNoTests
+      # Fails the job if coverage drops below the 90% thresholds in rstest.config.js
+      - run: pnpm test:coverage
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage
+          path: coverage/
+          if-no-files-found: ignore
 
   typecheck:
     name: Type check

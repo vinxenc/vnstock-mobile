@@ -9,7 +9,8 @@
     "format": "prettier --write .",
     "lint": "eslint .",
     "preview": "rspeedy preview",
-    "test": "rstest run"
+    "test": "rstest run",
+    "test:coverage": "rstest run --coverage"
   },
   "dependencies": {
     "@lynx-js/lynx-ui": "^3.137.0",
@@ -25,6 +26,7 @@
     "@lynx-js/types": "4.1.0",
     "@rsbuild/plugin-type-check": "1.6.0",
     "@rstest/core": "0.11.12",
+    "@rstest/coverage-istanbul": "0.11.12",
     "@testing-library/jest-dom": "^7.0.0",
     "@types/react": "^18.3.31",
     "eslint": "^10.7.0",

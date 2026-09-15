@@ -2,9 +2,9 @@ import { Button } from '@lynx-js/lynx-ui';
 import { useState } from '@lynx-js/react';
 import { useNavigate } from 'react-router';
 
-import { AuthScreen } from '../shared/AuthScreen.js';
-import { Field, type FieldInputEvent } from '../shared/Field.js';
-import { validateRegister, type RegisterErrors } from '../shared/authValidation.js';
+import { AuthScreen } from '../../components/AuthScreen/index.js';
+import { Field, type FieldInputEvent } from '../../components/Field/index.js';
+import { validateRegister, type RegisterErrors } from '../../lib/authValidation.js';
 
 export function Register() {
   const nav = useNavigate();

@@ -107,13 +107,24 @@ Other notes:
 
 ## Project structure
 
-Each screen is a self-contained folder `pages/<name>/index.tsx`, with its unit tests
-co-located under `__tests__/`. Building blocks shared across screens live in
-`pages/shared/`.
+Everything is organised as self-contained folders — `<name>/index.tsx` plus co-located
+`__tests__/`. Screens live in `pages/`, reusable UI in `components/`, and pure logic in
+`lib/`.
 
 ```
 src/
   index.tsx                          # entry: root.render() with <MemoryRouter> + <Routes>
+  components/                        # reusable UI (same folder-per-component convention)
+    AuthScreen/
+      index.tsx                      # scrollable, vertically-centered page shell
+      auth.css                       # shadcn-style design tokens + component styles
+      __tests__/index.spec.tsx
+    Field/
+      index.tsx                      # labeled <input> + inline validation error
+      __tests__/index.spec.tsx
+  lib/                               # framework-agnostic logic (no Lynx/JSX)
+    authValidation.ts                # pure, fully unit-tested form validation
+    __tests__/authValidation.spec.ts
   pages/
     login/
       index.tsx                      # Login screen
@@ -121,23 +132,18 @@ src/
     register/
       index.tsx                      # Register screen
       __tests__/index.spec.tsx
-    shared/                          # reused across auth screens
-      AuthScreen.tsx                 # scrollable, vertically-centered page shell
-      Field.tsx                      # labeled <input> + inline validation error
-      authValidation.ts              # pure, fully unit-tested form validation
-      auth.css                       # shadcn-style design tokens + component styles
-      __tests__/authValidation.spec.ts
 ```
 
 Conventions:
 
-- **Screens** are folders: `pages/<name>/index.tsx`, imported as `@/pages/<name>/index.js`.
+- **Folder-per-unit.** Screens (`pages/<name>/`) and components (`components/<Name>/`)
+  are folders exposing an `index.tsx`, imported as `@/pages/<name>/index.js` /
+  `@/components/<Name>/index.js`.
 - **Tests** are co-located in `__tests__/*.spec.tsx`. Rstest matches `*.{test,spec}.{ts,tsx}`,
   and CI enforces the **90 %** coverage thresholds from `rstest.config.js` — keep view
-  components thin and push logic into pure, testable modules (e.g. `authValidation.ts`).
-- **Shared building blocks** go under `pages/shared/`. As the app grows, cross-cutting
-  concerns (a vnstock API client, shared hooks, framework-agnostic utils) can graduate to
-  their own top-level `src/` folders.
+  components thin and push logic into pure `lib/` modules (e.g. `authValidation.ts`).
+- **Reusable building blocks** go in `components/` (UI) and `lib/` (logic), never under
+  `pages/`, so screens depend on them and not the other way around.
 
 The `@/*` path alias maps to `src/*` (configured in both `lynx.config.ts`
 `source.alias` and `src/tsconfig.json` `paths`).

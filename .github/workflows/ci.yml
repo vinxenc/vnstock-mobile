@@ -41,6 +41,21 @@ jobs:
       # --passWithNoTests keeps CI green until test files are added
       - run: pnpm test -- --passWithNoTests
 
+  typecheck:
+    name: Type check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec tsc -b --noEmit
+
   build:
     name: Build
     runs-on: ubuntu-latest

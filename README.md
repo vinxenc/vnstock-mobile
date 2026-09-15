@@ -25,8 +25,8 @@ pnpm dev
 ```
 
 Scan the QR code printed in the terminal with **Lynx Explorer** (or paste the bundle
-URL into its "Enter Bundle URL" field). Edit `src/App.tsx` or a page under `src/pages/`
-and the app hot-reloads.
+URL into its "Enter Bundle URL" field). Edit a page under `src/pages/` and the app
+hot-reloads.
 
 ## Run on the iOS Simulator
 
@@ -95,35 +95,58 @@ Other notes:
 
 ## Scripts
 
-| Command        | Description                                  |
-| -------------- | -------------------------------------------- |
-| `pnpm dev`     | Start the dev server (QR code + hot reload)  |
-| `pnpm build`   | Production build (runs the type checker too) |
-| `pnpm preview` | Preview the production build                 |
-| `pnpm test`    | Run tests (Rstest + React Lynx Testing Lib)  |
-| `pnpm lint`    | Lint with ESLint                             |
-| `pnpm format`  | Format with Prettier                         |
+| Command              | Description                                  |
+| -------------------- | -------------------------------------------- |
+| `pnpm dev`           | Start the dev server (QR code + hot reload)  |
+| `pnpm build`         | Production build (runs the type checker too) |
+| `pnpm preview`       | Preview the production build                 |
+| `pnpm test`          | Run tests (Rstest + React Lynx Testing Lib)  |
+| `pnpm test:coverage` | Run tests with the 90% coverage gate         |
+| `pnpm lint`          | Lint with ESLint                             |
+| `pnpm format`        | Format with Prettier                         |
 
 ## Project structure
 
+Each screen is a self-contained folder `pages/<name>/index.tsx`, with its unit tests
+co-located under `__tests__/`. Building blocks shared across screens live in
+`pages/shared/`.
+
 ```
 src/
-  index.tsx        # entry: root.render() wrapped in <MemoryRouter> + <Routes>
-  App.tsx          # /demo route — the ReactLynx starter demo
-  pages/           # route screens (Home, About, …)
-  components/      # shared UI built on @lynx-js/lynx-ui
-  hooks/           # shared hooks
-  lib/             # data fetching / vnstock API client
-  common/          # framework-agnostic utils (e.g. format.ts)
+  index.tsx                          # entry: root.render() with <MemoryRouter> + <Routes>
+  pages/
+    login/
+      index.tsx                      # Login screen
+      __tests__/index.spec.tsx
+    register/
+      index.tsx                      # Register screen
+      __tests__/index.spec.tsx
+    shared/                          # reused across auth screens
+      AuthScreen.tsx                 # scrollable, vertically-centered page shell
+      Field.tsx                      # labeled <input> + inline validation error
+      authValidation.ts              # pure, fully unit-tested form validation
+      auth.css                       # shadcn-style design tokens + component styles
+      __tests__/authValidation.spec.ts
 ```
+
+Conventions:
+
+- **Screens** are folders: `pages/<name>/index.tsx`, imported as `@/pages/<name>/index.js`.
+- **Tests** are co-located in `__tests__/*.spec.tsx`. Rstest matches `*.{test,spec}.{ts,tsx}`,
+  and CI enforces the **90 %** coverage thresholds from `rstest.config.js` — keep view
+  components thin and push logic into pure, testable modules (e.g. `authValidation.ts`).
+- **Shared building blocks** go under `pages/shared/`. As the app grows, cross-cutting
+  concerns (a vnstock API client, shared hooks, framework-agnostic utils) can graduate to
+  their own top-level `src/` folders.
 
 The `@/*` path alias maps to `src/*` (configured in both `lynx.config.ts`
 `source.alias` and `src/tsconfig.json` `paths`).
 
 ### Routing
 
-React Router v6 with `MemoryRouter`. ReactLynx has no DOM, so navigate with
-`useNavigate()` — `<Link>` / `<NavLink>` are not supported.
+React Router v6 with `MemoryRouter`. Routes are declared in `src/index.tsx`: `/` and
+`/login` render the Login screen, `/register` renders Register. ReactLynx has no DOM, so
+navigate with `useNavigate()` — `<Link>` / `<NavLink>` are not supported.
 
 ## AI-assisted development
 

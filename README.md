@@ -121,20 +121,101 @@ the bundle from local app resources — there is no dev server involved in a rel
 > This is also why [Sparkling](https://tiktok.github.io/sparkling/) is not used here: as of
 > 2.0.1 it pins Lynx 3.6.0, which predates `@lynx-js/lynx-ui`.
 
+Both `pnpm ios` and `pnpm android` run `pnpm build` and `pnpm bundle:copy` first, so the
+shells always package the current bundle. Run `pnpm bundle:copy` on its own after a
+`pnpm build` if you only want to refresh the bundle inside an already-configured shell.
+
 ### iOS
 
-Needs Xcode 16+, CocoaPods, and XcodeGen (`brew install cocoapods xcodegen`).
+**One-time setup**
 
-`VNStock.xcodeproj` is **generated** from `ios/project.yml` and is not committed — edit the
-YAML, never the project file. After `pnpm ios`, open `ios/VNStock.xcworkspace` (the
-workspace, not the project) and run.
+```bash
+brew install cocoapods xcodegen
+```
+
+Xcode 16 or later is also required (developed against Xcode 26).
+
+**Build**
+
+```bash
+pnpm ios
+```
+
+That builds the bundle, copies it into `ios/VNStock/Resources/`, regenerates
+`VNStock.xcodeproj` from `ios/project.yml`, and runs `pod install`.
+
+`VNStock.xcodeproj` and `ios/VNStock/Info.plist` are **generated** and gitignored — edit
+`ios/project.yml`, never the project file. The first `pod install` clones the
+[lynx-family Specs](https://github.com/lynx-family/Specs) repo and takes a few minutes.
+
+**Run**
+
+Open **`ios/VNStock.xcworkspace`** — the workspace, not the `.xcodeproj`, or the pods are
+missing — pick a simulator and hit Run. To do it from the terminal instead:
+
+```bash
+cd ios && xcodebuild -workspace VNStock.xcworkspace -scheme VNStock -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 17' -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
+```
+
+```bash
+xcrun simctl install booted ios/build/Build/Products/Debug-iphonesimulator/VNStock.app && xcrun simctl launch booted com.vnstock.mobile
+```
 
 ### Android
 
-Needs JDK 17 (`brew install --cask temurin@17`) and the Android SDK
-(`brew install --cask android-commandlinetools`, then set `ANDROID_HOME`).
+**One-time setup**
 
-`pnpm android` writes the APK to `android/app/build/outputs/apk/debug/`.
+```bash
+brew install --cask temurin@17 android-commandlinetools
+```
+
+The JDK installer needs your password. Then point the SDK at itself and accept the
+licences:
+
+```bash
+export ANDROID_HOME=/opt/homebrew/share/android-commandlinetools && yes | sdkmanager --licenses && sdkmanager --install "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+```
+
+Add `ANDROID_HOME` (and `$ANDROID_HOME/platform-tools` on `PATH`) to your shell profile so
+Gradle and `adb` find the SDK in new shells.
+
+**Build**
+
+```bash
+pnpm android
+```
+
+The APK lands in `android/app/build/outputs/apk/debug/app-debug.apk` (~74 MB debug: it
+bundles Lynx's native libraries for every ABI, unstripped).
+
+**Run**
+
+For an emulator, install a system image and create an AVD once:
+
+```bash
+sdkmanager --install "emulator" "system-images;android-35;google_apis;arm64-v8a" && avdmanager create avd -n vnstock -k "system-images;android-35;google_apis;arm64-v8a"
+```
+
+The default AVD asks for a 12 GB userdata partition. If the emulator dies with
+`Not enough space to create userdata partition`, lower `disk.dataPartition.size` in
+`~/.android/avd/<name>.avd/config.ini` — 4 GB is ample for this app, and the image grows
+on demand rather than preallocating.
+
+```bash
+$ANDROID_HOME/emulator/emulator -avd vnstock &
+```
+
+```bash
+adb install -r android/app/build/outputs/apk/debug/app-debug.apk && adb shell am start -n com.vnstock.mobile/.MainActivity
+```
+
+> **Registering native elements is manual on Android.** iOS pods self-register, Android
+> does not: XElement's behaviours are passed as the fourth argument of `LynxEnv.init` in
+> [`VNStockApplication.kt`](android/app/src/main/java/com/vnstock/mobile/VNStockApplication.kt).
+> Drop them and `<input>` renders as *nothing* — no box, no placeholder, no error in
+> logcat — while the text around it renders fine. Any further XElement package
+> (`xelement-overlay`, `xelement-svg`, …) needs its Gradle dependency **and** its
+> behaviours wired up the same way.
 
 ## Project structure
 

@@ -1,0 +1,40 @@
+# Lynx ships its pods from the lynx-family Specs repo; PrimJS and the rest come from the CDN.
+source 'https://cdn.cocoapods.org/'
+source 'https://github.com/lynx-family/Specs.git'
+
+platform :ios, '15.0'
+
+# Keep in sync with the JS side: @lynx-js/types in package.json pins the bundle's engine version.
+LYNX_VERSION = '4.1.0'
+PRIMJS_VERSION = '4.1.1'
+
+target 'VNStock' do
+  pod 'Lynx', LYNX_VERSION, :subspecs => ['Framework']
+  pod 'PrimJS', PRIMJS_VERSION, :subspecs => ['quickjs', 'napi']
+
+  pod 'LynxService', LYNX_VERSION, :subspecs => ['Image', 'Log', 'Http']
+
+  # LynxImageService is implemented on top of SDWebImage.
+  pod 'SDWebImage', '5.15.5'
+  pod 'SDWebImageWebPCoder', '0.11.0'
+
+  # XElement backs <input>, which the auth screens use via lynx-ui's Input.
+  pod 'XElement', LYNX_VERSION
+end
+
+# Xcode 26 turns the warnings in Lynx's sources into errors; demote them.
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['GCC_TREAT_WARNINGS_AS_ERRORS'] = 'NO'
+
+      disable = ['-Wno-error', '-Wno-c99-designator',
+                 '-Wno-deprecated-declarations', '-Wno-deprecated-implementations']
+      ['OTHER_CPLUSPLUSFLAGS', 'OTHER_CFLAGS'].each do |key|
+        flags = config.build_settings[key] || ['$(inherited)']
+        flags = [flags] unless flags.is_a?(Array)
+        config.build_settings[key] = flags + disable
+      end
+    end
+  end
+end

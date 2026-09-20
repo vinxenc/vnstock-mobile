@@ -13,7 +13,7 @@ React Router v6 · TypeScript · ESLint + Prettier · Rstest.
 - **Node.js** `^20.19.0 || >=22.12.0`
 - **pnpm** (`corepack enable pnpm`)
 - **Lynx Explorer** app to preview on device (iOS Simulator / Android / HarmonyOS) —
-  see [Run on the iOS Simulator](#run-on-the-ios-simulator) below or the
+  see [Preview with Lynx Explorer](#preview-with-lynx-explorer) below or the
   [Quick Start](https://lynxjs.org/guide/start/quick-start.html). The iOS Simulator path
   additionally needs a full **Xcode** install.
 
@@ -28,12 +28,28 @@ Scan the QR code printed in the terminal with **Lynx Explorer** (or paste the bu
 URL into its "Enter Bundle URL" field). Edit a page under `src/pages/` and the app
 hot-reloads.
 
-## Run on the iOS Simulator
+## Two ways to run the app
+
+Pick the one that matches what you are doing — they are independent, and the setup for
+one is not needed for the other.
+
+|                   | **Lynx Explorer**                                     | **Native app**                                                         |
+| ----------------- | ----------------------------------------------------- | ---------------------------------------------------------------------- |
+| What runs         | A sandbox app that loads your bundle over the network | `VNStock`, the real app                                                |
+| Bundle comes from | `pnpm dev`, over your LAN                             | Baked into the app at build time                                       |
+| Hot reload        | Yes                                                   | No — rebuild to see changes                                            |
+| Setup cost        | Low                                                   | Xcode/Android toolchains, see [Native apps](#native-apps-ios--android) |
+| Use it for        | Day-to-day UI work                                    | Verifying the shipped app, native code, release checks                 |
+
+Most work happens in Explorer. Reach for the native app when you change something the
+shell owns, or when you need to see what users will actually install.
+
+## Preview with Lynx Explorer
 
 LynxExplorer is the sandbox app that loads your dev bundle. It is **not** on the App
-Store — you install a prebuilt build into the simulator.
+Store — you install a prebuilt build into the simulator or emulator.
 
-### One-time setup
+### iOS Simulator — one-time setup
 
 1. Install **Xcode** (Mac App Store), then point the tools at it and add the iOS
    Simulator runtime:
@@ -56,6 +72,20 @@ Store — you install a prebuilt build into the simulator.
    xcrun simctl install booted ./LynxExplorer.app
    xcrun simctl launch booted com.lynx.LynxExplorer   # bundle id: com.lynx.LynxExplorer
    ```
+
+### Android emulator — one-time setup
+
+Set up the SDK and an emulator first (see
+[Android](#android) under Native apps), then install the Android LynxExplorer APK from the
+same [Lynx releases](https://github.com/lynx-family/lynx/releases) page onto a running
+emulator:
+
+```bash
+adb install -r LynxExplorer-noasan-release.apk
+```
+
+> Unverified: the iOS Simulator path above is the one used day to day here. The Android
+> APK names and flags on the releases page may differ from this example.
 
 ### Each run
 
@@ -95,18 +125,18 @@ Other notes:
 
 ## Scripts
 
-| Command              | Description                                  |
-| -------------------- | -------------------------------------------- |
-| `pnpm dev`           | Start the dev server (QR code + hot reload)  |
-| `pnpm build`         | Production build (runs the type checker too) |
-| `pnpm preview`       | Preview the production build                 |
-| `pnpm test`          | Run tests (Rstest + React Lynx Testing Lib)  |
-| `pnpm test:coverage` | Run tests with the 90% coverage gate         |
-| `pnpm lint`          | Lint with ESLint                             |
-| `pnpm format`        | Format with Prettier                         |
+| Command              | Description                                   |
+| -------------------- | --------------------------------------------- |
+| `pnpm dev`           | Start the dev server (QR code + hot reload)   |
+| `pnpm build`         | Production build (runs the type checker too)  |
+| `pnpm preview`       | Preview the production build                  |
+| `pnpm test`          | Run tests (Rstest + React Lynx Testing Lib)   |
+| `pnpm test:coverage` | Run tests with the 90% coverage gate          |
+| `pnpm lint`          | Lint with ESLint                              |
+| `pnpm format`        | Format with Prettier                          |
 | `pnpm bundle:copy`   | Copy `dist/main.lynx.bundle` into both shells |
-| `pnpm ios`           | Build + regenerate the Xcode project + pods  |
-| `pnpm android`       | Build + assemble the debug APK               |
+| `pnpm ios`           | Build + regenerate the Xcode project + pods   |
+| `pnpm android`       | Build + assemble the debug APK                |
 
 ## Native apps (iOS / Android)
 
@@ -212,10 +242,60 @@ adb install -r android/app/build/outputs/apk/debug/app-debug.apk && adb shell am
 > **Registering native elements is manual on Android.** iOS pods self-register, Android
 > does not: XElement's behaviours are passed as the fourth argument of `LynxEnv.init` in
 > [`VNStockApplication.kt`](android/app/src/main/java/com/vnstock/mobile/VNStockApplication.kt).
-> Drop them and `<input>` renders as *nothing* — no box, no placeholder, no error in
+> Drop them and `<input>` renders as _nothing_ — no box, no placeholder, no error in
 > logcat — while the text around it renders fine. Any further XElement package
 > (`xelement-overlay`, `xelement-svg`, …) needs its Gradle dependency **and** its
 > behaviours wired up the same way.
+
+## Managing simulators and emulators
+
+Handy for both workflows above.
+
+### iOS Simulator
+
+Simulators come with Xcode; `xcrun simctl` drives them headlessly and `booted` targets
+whichever one is currently running.
+
+| Task                           | Command                                              |
+| ------------------------------ | ---------------------------------------------------- |
+| List installable devices       | `xcrun simctl list devices available`                |
+| See what is running            | `xcrun simctl list devices \| grep Booted`           |
+| Boot one + open the window     | `xcrun simctl boot "iPhone 17" && open -a Simulator` |
+| Install an app                 | `xcrun simctl install booted path/to/VNStock.app`    |
+| Launch by bundle id            | `xcrun simctl launch booted com.vnstock.mobile`      |
+| Screenshot                     | `xcrun simctl io booted screenshot shot.png`         |
+| Copy text into the device      | `printf 'text' \| xcrun simctl pbcopy booted`        |
+| Shut down                      | `xcrun simctl shutdown booted`                       |
+| Reclaim disk from old runtimes | `xcrun simctl delete unavailable`                    |
+
+Several simulators can be booted at once, so `booted` is ambiguous when they are — pass
+the UDID from the list instead.
+
+### Android emulator
+
+The emulator and system images are SDK packages, so they install through `sdkmanager`;
+`adb` talks to whatever is running.
+
+| Task                           | Command                                                  |
+| ------------------------------ | -------------------------------------------------------- |
+| List AVDs                      | `emulator -list-avds`                                    |
+| Start one                      | `$ANDROID_HOME/emulator/emulator -avd vnstock &`         |
+| See what is connected          | `adb devices`                                            |
+| Wait for a cold boot to finish | `adb wait-for-device shell getprop sys.boot_completed`   |
+| Install an APK                 | `adb install -r path/to/app-debug.apk`                   |
+| Launch an activity             | `adb shell am start -n com.vnstock.mobile/.MainActivity` |
+| Screenshot                     | `adb exec-out screencap -p > shot.png`                   |
+| Tap at x y                     | `adb shell input tap 540 1200`                           |
+| App logs only                  | `adb logcat --pid=$(adb shell pidof com.vnstock.mobile)` |
+| Stop the emulator              | `adb emu kill`                                           |
+
+`adb` lives in `platform-tools`, which Homebrew does not symlink — add
+`$ANDROID_HOME/platform-tools` to `PATH`.
+
+A cold boot takes about a minute. If the host is short on RAM the emulator falls back to
+software GL and says so in its output: rendering and layout stay correct, but **anything
+performance-related — scroll smoothness, animation timing, input latency — is
+meaningless**. Judge performance on a physical device.
 
 ## Project structure
 

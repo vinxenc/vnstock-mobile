@@ -59,9 +59,7 @@
   max-width: 620rpx;
   display: flex;
   flex-direction: column;
-  padding: 48rpx;
-  border-radius: 28rpx;
-  border: 1rpx solid var(--border);
+  padding: 48rpx 0;
   background-color: var(--card);
 }
 

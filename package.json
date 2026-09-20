@@ -4,6 +4,9 @@
   "type": "module",
   "scripts": {
     "build": "rspeedy build",
+    "bundle:copy": "cp dist/main.lynx.bundle ios/VNStock/Resources/ && cp dist/main.lynx.bundle android/app/src/main/assets/",
+    "ios": "pnpm build && pnpm bundle:copy && cd ios && xcodegen generate && pod install",
+    "android": "pnpm build && pnpm bundle:copy && cd android && ./gradlew assembleDebug",
     "analyze": "RSDOCTOR=true rspeedy build",
     "dev": "rspeedy dev",
     "format": "prettier --write .",

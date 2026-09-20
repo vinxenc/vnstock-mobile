@@ -104,6 +104,37 @@ Other notes:
 | `pnpm test:coverage` | Run tests with the 90% coverage gate         |
 | `pnpm lint`          | Lint with ESLint                             |
 | `pnpm format`        | Format with Prettier                         |
+| `pnpm bundle:copy`   | Copy `dist/main.lynx.bundle` into both shells |
+| `pnpm ios`           | Build + regenerate the Xcode project + pods  |
+| `pnpm android`       | Build + assemble the debug APK               |
+
+## Native apps (iOS / Android)
+
+The ReactLynx build only produces `dist/main.lynx.bundle`. Shipping an installable app
+needs a native host embedding LynxEngine, which lives in `ios/` and `android/`. Both load
+the bundle from local app resources — there is no dev server involved in a release build.
+
+> **Engine version is coupled to the bundle.** `ios/Podfile` and `android/app/build.gradle.kts`
+> both pin Lynx **4.1.0** / PrimJS **4.1.1** to match `@lynx-js/types` in `package.json`.
+> Bump all three together or the bundle will fail to render.
+>
+> This is also why [Sparkling](https://tiktok.github.io/sparkling/) is not used here: as of
+> 2.0.1 it pins Lynx 3.6.0, which predates `@lynx-js/lynx-ui`.
+
+### iOS
+
+Needs Xcode 16+, CocoaPods, and XcodeGen (`brew install cocoapods xcodegen`).
+
+`VNStock.xcodeproj` is **generated** from `ios/project.yml` and is not committed — edit the
+YAML, never the project file. After `pnpm ios`, open `ios/VNStock.xcworkspace` (the
+workspace, not the project) and run.
+
+### Android
+
+Needs JDK 17 (`brew install --cask temurin@17`) and the Android SDK
+(`brew install --cask android-commandlinetools`, then set `ANDROID_HOME`).
+
+`pnpm android` writes the APK to `android/app/build/outputs/apk/debug/`.
 
 ## Project structure
 

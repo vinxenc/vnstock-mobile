@@ -1,0 +1,39 @@
+# XcodeGen spec — regenerate VNStock.xcodeproj with `xcodegen generate` (run from ios/).
+# The .xcodeproj is generated, not committed; this file is the source of truth.
+name: VNStock
+options:
+  bundleIdPrefix: com.vnstock
+  deploymentTarget:
+    iOS: '15.0'
+  createIntermediateGroups: true
+
+targets:
+  VNStock:
+    type: application
+    platform: iOS
+    sources:
+      - path: VNStock
+        excludes:
+          - '**/*.h'
+      - path: VNStock/VNStock-Bridging-Header.h
+        buildPhase: none
+      # The Lynx bundle produced by `pnpm build`, copied here by `pnpm ios:bundle`.
+      - path: VNStock/Resources/main.lynx.bundle
+        optional: true
+        buildPhase: resources
+    info:
+      path: VNStock/Info.plist
+      properties:
+        CFBundleDisplayName: VNStock
+        UILaunchStoryboardName: ''
+        UIRequiredDeviceCapabilities: [armv7]
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UIUserInterfaceStyle: Light
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.vnstock.mobile
+        SWIFT_OBJC_BRIDGING_HEADER: VNStock/VNStock-Bridging-Header.h
+        TARGETED_DEVICE_FAMILY: '1'
+        # Lynx's CocoaPods scripts need to write outside the sandbox.
+        ENABLE_USER_SCRIPT_SANDBOXING: 'NO'

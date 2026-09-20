@@ -17,3 +17,17 @@ coverage/
 
 # TypeScript
 *.tsbuildinfo
+
+# Native shells — generated project files and build output
+ios/VNStock.xcodeproj/
+ios/build/
+ios/Pods/
+ios/Podfile.lock
+ios/VNStock.xcworkspace/
+ios/VNStock/Resources/*.lynx.bundle
+android/app/src/main/assets/*.lynx.bundle
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+ios/VNStock/Info.plist
